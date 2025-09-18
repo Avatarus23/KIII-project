@@ -82,6 +82,6 @@ docker-compose down -v
 ## Sample Data
 
 The database is initialized with sample users:
-- John Doe (john@example.com)
-- Jane Smith (jane@example.com)
-- Bob Johnson (bob@example.com)
+- Bobi Galic (bobi.galic@yahoo.com)
+- Teo Eftimov (teo553@gmail.com)
+- Martin Grombanovski (martingrombanovski@yahoo.com)

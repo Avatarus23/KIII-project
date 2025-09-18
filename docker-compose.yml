@@ -6,9 +6,9 @@ services:
     image: postgres:15
     container_name: fullstack_db
     environment:
-      POSTGRES_DB: fullstack_app
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:password@db:5432/fullstack_app
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
     volumes:
@@ -43,7 +43,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_API_URL: http://localhost:8000
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
     depends_on:
       - backend
     volumes:

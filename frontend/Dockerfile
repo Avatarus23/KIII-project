@@ -1,14 +1,13 @@
+#official node:18-alpine image
 FROM node:18-alpine
-
+#set workdir
 WORKDIR /app
-
-# Copy package files first for better caching
+# copy requirements and install Node.js dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy application code
+#copy application code at the same location
 COPY . .
-
+#expose port
 EXPOSE 3000
-
+#command to run the app
 CMD ["npm", "start"]
