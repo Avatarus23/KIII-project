@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>DevOps Project - Messages</title>
+    <style>body{font-family:Arial;margin:2rem}input{width:300px}</style>
+  </head>
+  <body>
+    <h1>Messages</h1>
+    <div>
+      <input id="msg" placeholder="Type a message" />
+      <button onclick="send()">Send</button>
+      <button onclick="load()">Refresh</button>
+    </div>
+    <ul id="list"></ul>
+
+    <script>
+      async function load(){
+        try {
+          const res = await fetch('/api/messages');
+          const data = await res.json();
+          const ul = document.getElementById('list');
+          ul.innerHTML = '';
+          data.forEach(m => {
+            const li = document.createElement('li');
+            li.textContent = `${m.text} — ${new Date(m.created_at).toLocaleString()}`;
+            ul.appendChild(li);
+          });
+        } catch (err) {
+          alert('Failed to load messages: ' + err);
+        }
+      }
+      async function send(){
+        const v = document.getElementById('msg').value;
+        if(!v) return alert('Enter message');
+        await fetch('/api/messages', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ text: v })
+        });
+        document.getElementById('msg').value = '';
+        load();
+      }
+      load();
+    </script>
+  </body>
+</html>
