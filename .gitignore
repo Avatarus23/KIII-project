@@ -36,3 +36,6 @@ dist/
 # Database
 *.db
 *.sqlite
+
+# Next.js
+.next
