@@ -1,5 +1,5 @@
 ---
-name: Lint Create and publish Docker image
+name: Build, Lint, and Publish Docker Images
 
 on:
   push:
@@ -35,6 +35,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      statuses: write
       id-token: write
     steps:
       - name: Checkout Code
@@ -54,24 +55,28 @@ jobs:
 
     # Backend
       - name: Build Backend Image
-        run: docker build ./backend --file ./backend/Dockerfile --tag $BACKEND_IMAGE:${{ env.COMMIT_HASH }}
+        run: docker build ./backend \
+              --file ./backend/Dockerfile \
+              --tag "${BACKEND_IMAGE}:${COMMIT_HASH}"
 
       - name: Push Backend Image (commit hash)
-        run: docker push $BACKEND_IMAGE:${{ env.COMMIT_HASH }}
+        run: docker push "${BACKEND_IMAGE}:${COMMIT_HASH}"
 
       - name: Tag and Push Backend Image (latest)
         run: |
-          docker tag $BACKEND_IMAGE:${{ env.COMMIT_HASH }} $BACKEND_IMAGE:latest
-          docker push $BACKEND_IMAGE:latest
+          docker tag "${BACKEND_IMAGE}:${COMMIT_HASH}" "${BACKEND_IMAGE}:latest"
+          docker push "${BACKEND_IMAGE}:latest"
 
-    # Frontend
+      # Frontend
       - name: Build Frontend Image
-        run: docker build ./frontend --file ./frontend/Dockerfile --tag $FRONTEND_IMAGE:${{ env.COMMIT_HASH }}
+        run: docker build ./frontend \
+              --file ./frontend/Dockerfile \
+              --tag "${FRONTEND_IMAGE}:${COMMIT_HASH}"
 
       - name: Push Frontend Image (commit hash)
-        run: docker push $FRONTEND_IMAGE:${{ env.COMMIT_HASH }}
+        run: docker push "${FRONTEND_IMAGE}:${COMMIT_HASH}"
 
       - name: Tag and Push Frontend Image (latest)
         run: |
-          docker tag $FRONTEND_IMAGE:${{ env.COMMIT_HASH }} $FRONTEND_IMAGE:latest
-          docker push $FRONTEND_IMAGE:latest
+          docker tag "${FRONTEND_IMAGE}:${COMMIT_HASH}" "${FRONTEND_IMAGE}:latest"
+          docker push "${FRONTEND_IMAGE}:latest"
