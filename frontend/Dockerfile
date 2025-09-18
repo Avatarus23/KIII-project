@@ -6,7 +6,7 @@ LABEL maintainer="bobi.galic@yahoo.com"
 WORKDIR /app
 # copy requirements and install Node.js dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 #copy application code at the same location
 COPY . .
 #expose port
