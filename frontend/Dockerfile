@@ -1,5 +1,7 @@
 #official node:18-alpine image
 FROM node:18-alpine
+#label
+LABEL maintainer="bobi.galic@yahoo.com"
 #set workdir
 WORKDIR /app
 # copy requirements and install Node.js dependencies

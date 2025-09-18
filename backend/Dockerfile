@@ -1,5 +1,7 @@
 #minimal Python 3.11 env
 FROM python:3.11-slim
+#label
+LABEL maintainer="bobi.galic@yahoo.com"
 #set workdir where all subsequent commands will be executed inside
 WORKDIR /app
 #system dependencies

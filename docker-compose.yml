@@ -22,6 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: galic/kiii-project_backend:latest
     container_name: fullstack_backend
     ports:
       - "8000:8000"
@@ -39,6 +40,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: galic/kiii-project_frontend:latest
     container_name: fullstack_frontend
     ports:
       - "3000:3000"
