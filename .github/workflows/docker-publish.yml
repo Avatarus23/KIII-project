@@ -55,9 +55,10 @@ jobs:
 
     # Backend
       - name: Build Backend Image
-        run: docker build ./backend \
+        run: docker buildx build ./backend \
               --file ./backend/Dockerfile \
-              --tag "${BACKEND_IMAGE}:${COMMIT_HASH}"
+              --tag "${BACKEND_IMAGE}:${COMMIT_HASH}" \
+              --load
 
       - name: Push Backend Image (commit hash)
         run: docker push "${BACKEND_IMAGE}:${COMMIT_HASH}"
@@ -69,9 +70,10 @@ jobs:
 
       # Frontend
       - name: Build Frontend Image
-        run: docker build ./frontend \
+        run: docker buildx build ./frontend \
               --file ./frontend/Dockerfile \
-              --tag "${FRONTEND_IMAGE}:${COMMIT_HASH}"
+              --tag "${FRONTEND_IMAGE}:${COMMIT_HASH}" \
+              --load
 
       - name: Push Frontend Image (commit hash)
         run: docker push "${FRONTEND_IMAGE}:${COMMIT_HASH}"
