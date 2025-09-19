@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: kiii-project
+data:
+  REACT_APP_API_URL: http://kiii.localhost/api
+  DATABASE_HOST: "db"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "fullstack_app"
