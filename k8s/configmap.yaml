@@ -4,7 +4,9 @@ metadata:
   name: app-config
   namespace: kiii-project
 data:
-  REACT_APP_API_URL: http://kiii.localhost/api
+  REACT_APP_API_URL: "http://kiii.localhost/api"
   DATABASE_HOST: "db"
   DATABASE_PORT: "5432"
   DATABASE_NAME: "fullstack_app"
+  BACKEND_HOST: "backend"
+  BACKEND_PORT: "8000"

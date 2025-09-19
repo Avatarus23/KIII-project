@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: kiii-project
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -13,15 +13,45 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: postgres:15
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DATABASE_PORT
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: POSTGRES_PASSWORD
+        command:
+        - sh
+        - -c
+        - |
+          until pg_isready -h $DATABASE_HOST -p $DATABASE_PORT -U $POSTGRES_USER; do
+            echo "Waiting for DB..."
+            sleep 2
+          done
+
       containers:
       - name: backend
         image: galic/backend:latest
         ports:
         - containerPort: 8000
         env:
-        - name: DATABASE_URL
-          value: postgresql://postgres:password@db:5432/fullstack_app
-          
         - name: DATABASE_HOST
           valueFrom:
             configMapKeyRef:
@@ -47,18 +77,20 @@ spec:
             secretKeyRef:
               name: app-secrets
               key: POSTGRES_PASSWORD
-        envFrom:
-        - configMapRef:
-            name: app-config
-        - secretRef:
-            name: app-secrets
+        - name: DATABASE_URL
+          value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)
 
         readinessProbe:
           exec:
             command:
             - sh
             - -c
-            - "pg_isready -h $DATABASE_HOST -p $DATABASE_PORT"
+            - |
+              if [ -z "$DATABASE_HOST" ] || [ -z "$DATABASE_PORT" ] || [ -z "$POSTGRES_USER" ]; then
+                echo "Missing required environment variables for readiness probe" >&2
+                exit 1
+              fi
+              pg_isready -h $DATABASE_HOST -p $DATABASE_PORT -U $POSTGRES_USER
           initialDelaySeconds: 5
           periodSeconds: 5
 ---
